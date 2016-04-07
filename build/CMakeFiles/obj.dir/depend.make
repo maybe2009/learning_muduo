@@ -4,6 +4,10 @@
 CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o: ../ThreadPool/headers/Thread/Thread.h
 CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o: ../ThreadPool/src/Thread/Thread.cpp
 
-CMakeFiles/obj.dir/main.cpp.o: .././ThreadPool/headers/Thread/Thread.h
-CMakeFiles/obj.dir/main.cpp.o: ../main.cpp
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../ThreadPool/headers/FixedBuffer/FixedBuffer.h
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../ThreadPool/headers/FixedBuffer/FixedBufferHandle.h
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../ThreadPool/headers/Synchronization/Condition.h
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../ThreadPool/headers/Synchronization/Mutex.h
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../ThreadPool/headers/Thread/Thread.h
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../lab/test_FixedBufferHandle.cpp
 

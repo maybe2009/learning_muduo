@@ -1,0 +1,94 @@
+//
+// Created by admin on 3/9/16.
+//
+
+#ifndef OBJ_LOGSTREAM_H
+#define OBJ_LOGSTREAM_H
+
+#include <iostream>
+#include <string>
+#include "../FixedBuffer/FixedBuffer.h"
+namespace ok {
+#define MAXINTLENGTH 20
+class LogStream {
+public:
+	LogStream(int buf_size);
+	LogStream& operator<<(int);
+	LogStream& operator<<(long);
+	LogStream& operator<<(long long);
+	LogStream& operator<<(unsigned long long)
+	LogStream& operator<<(char);
+	LogStream& operator<<(std::string str);
+	//TODO: remove show after test
+	void show();
+
+	void clearBuffer();
+private:
+	FixedBuffer buffer_;
+	FixedBuffer::BYTE intBuf[MAXINTLENGTH + 1];
+};
+
+LogStream::LogStream(int buf_size)
+	: buffer_(buf_size)
+{}
+
+//TODO: remove after test
+void LogStream::
+show()
+{
+	buffer_.show();
+}
+
+LogStream &LogStream::
+operator<<(long long v)
+{
+	std::cout << "long long version called" << std::endl;
+	int num = snprintf(intBuf, MAXINTLENGTH + 1, "%lld", v);
+	if(num > 0 && num <= buffer_.getAvailable())
+	{
+		std::cout << "Num is " << num << std::endl;
+		buffer_.write(intBuf, static_cast<size_t>(num));
+	}
+
+	return *this;
+}
+
+LogStream &LogStream::operator<<(long v)
+{
+	std::cout << "long version called" << std::endl;
+	return *this << static_cast<long long>(v);
+}
+
+LogStream &LogStream::
+operator<<(int v)
+{
+	std::cout << "int version called" << std::endl;
+	return *this << static_cast<long long>(v);
+}
+
+LogStream &LogStream::
+operator<<(char v)
+{
+	buffer_.write(&v,1);
+	return *this;
+}
+
+LogStream &LogStream::operator<<(std::string str)
+{
+	if(buffer_.getAvailable()>= str.length())
+	{
+		buffer_.write(str.c_str(), str.length());
+	}
+	return *this;
+}
+
+void LogStream::clearBuffer()
+{
+	buffer_.clear();
+}
+
+LogStream &LogStream::operator<<(unsigned long long int i1) {
+	return *this << static_cast<long long>;
+}
+};
+#endif //OBJ_LOGSTREAM_H

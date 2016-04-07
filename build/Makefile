@@ -135,29 +135,29 @@ ThreadPool/src/Thread/Thread.cpp.s:
 	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.s
 .PHONY : ThreadPool/src/Thread/Thread.cpp.s
 
-main.o: main.cpp.o
-.PHONY : main.o
+lab/test_FixedBufferHandle.o: lab/test_FixedBufferHandle.cpp.o
+.PHONY : lab/test_FixedBufferHandle.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/main.cpp.o
-.PHONY : main.cpp.o
+lab/test_FixedBufferHandle.cpp.o:
+	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o
+.PHONY : lab/test_FixedBufferHandle.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+lab/test_FixedBufferHandle.i: lab/test_FixedBufferHandle.cpp.i
+.PHONY : lab/test_FixedBufferHandle.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/main.cpp.i
-.PHONY : main.cpp.i
+lab/test_FixedBufferHandle.cpp.i:
+	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.i
+.PHONY : lab/test_FixedBufferHandle.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+lab/test_FixedBufferHandle.s: lab/test_FixedBufferHandle.cpp.s
+.PHONY : lab/test_FixedBufferHandle.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/main.cpp.s
-.PHONY : main.cpp.s
+lab/test_FixedBufferHandle.cpp.s:
+	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.s
+.PHONY : lab/test_FixedBufferHandle.cpp.s
 
 # Help Target
 help:
@@ -171,9 +171,9 @@ help:
 	@echo "... ThreadPool/src/Thread/Thread.o"
 	@echo "... ThreadPool/src/Thread/Thread.i"
 	@echo "... ThreadPool/src/Thread/Thread.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... lab/test_FixedBufferHandle.o"
+	@echo "... lab/test_FixedBufferHandle.i"
+	@echo "... lab/test_FixedBufferHandle.s"
 .PHONY : help
 
 

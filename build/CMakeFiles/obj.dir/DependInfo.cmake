@@ -5,7 +5,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/admin/ClionProjects/ThreadPool/ThreadPool/src/Thread/Thread.cpp" "/home/admin/ClionProjects/ThreadPool/build/CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o"
-  "/home/admin/ClionProjects/ThreadPool/main.cpp" "/home/admin/ClionProjects/ThreadPool/build/CMakeFiles/obj.dir/main.cpp.o"
+  "/home/admin/ClionProjects/ThreadPool/lab/test_FixedBufferHandle.cpp" "/home/admin/ClionProjects/ThreadPool/build/CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -49,32 +49,9 @@ include CMakeFiles/obj.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/obj.dir/flags.make
 
-CMakeFiles/obj.dir/main.cpp.o: CMakeFiles/obj.dir/flags.make
-CMakeFiles/obj.dir/main.cpp.o: ../main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/admin/ClionProjects/ThreadPool/build/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/obj.dir/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/obj.dir/main.cpp.o -c /home/admin/ClionProjects/ThreadPool/main.cpp
-
-CMakeFiles/obj.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/obj.dir/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/admin/ClionProjects/ThreadPool/main.cpp > CMakeFiles/obj.dir/main.cpp.i
-
-CMakeFiles/obj.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/obj.dir/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/admin/ClionProjects/ThreadPool/main.cpp -o CMakeFiles/obj.dir/main.cpp.s
-
-CMakeFiles/obj.dir/main.cpp.o.requires:
-.PHONY : CMakeFiles/obj.dir/main.cpp.o.requires
-
-CMakeFiles/obj.dir/main.cpp.o.provides: CMakeFiles/obj.dir/main.cpp.o.requires
-	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/main.cpp.o.provides.build
-.PHONY : CMakeFiles/obj.dir/main.cpp.o.provides
-
-CMakeFiles/obj.dir/main.cpp.o.provides.build: CMakeFiles/obj.dir/main.cpp.o
-
 CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o: CMakeFiles/obj.dir/flags.make
 CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o: ../ThreadPool/src/Thread/Thread.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/admin/ClionProjects/ThreadPool/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/admin/ClionProjects/ThreadPool/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o -c /home/admin/ClionProjects/ThreadPool/ThreadPool/src/Thread/Thread.cpp
 
@@ -95,28 +72,51 @@ CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o.provides: CMakeFiles/obj.d
 
 CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o.provides.build: CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o
 
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: CMakeFiles/obj.dir/flags.make
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o: ../lab/test_FixedBufferHandle.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/admin/ClionProjects/ThreadPool/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o -c /home/admin/ClionProjects/ThreadPool/lab/test_FixedBufferHandle.cpp
+
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/admin/ClionProjects/ThreadPool/lab/test_FixedBufferHandle.cpp > CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.i
+
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/admin/ClionProjects/ThreadPool/lab/test_FixedBufferHandle.cpp -o CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.s
+
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.requires:
+.PHONY : CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.requires
+
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.provides: CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.requires
+	$(MAKE) -f CMakeFiles/obj.dir/build.make CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.provides.build
+.PHONY : CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.provides
+
+CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.provides.build: CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o
+
 # Object files for target obj
 obj_OBJECTS = \
-"CMakeFiles/obj.dir/main.cpp.o" \
-"CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o"
+"CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o" \
+"CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o"
 
 # External object files for target obj
 obj_EXTERNAL_OBJECTS =
 
-obj: CMakeFiles/obj.dir/main.cpp.o
-obj: CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o
-obj: CMakeFiles/obj.dir/build.make
-obj: /usr/lib/x86_64-linux-gnu/libpthread.a
-obj: CMakeFiles/obj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable obj"
+../bin/obj: CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o
+../bin/obj: CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o
+../bin/obj: CMakeFiles/obj.dir/build.make
+../bin/obj: /lib/x86_64-linux-gnu/libpthread.so.0
+../bin/obj: CMakeFiles/obj.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable ../bin/obj"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/obj.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/obj.dir/build: obj
+CMakeFiles/obj.dir/build: ../bin/obj
 .PHONY : CMakeFiles/obj.dir/build
 
-CMakeFiles/obj.dir/requires: CMakeFiles/obj.dir/main.cpp.o.requires
 CMakeFiles/obj.dir/requires: CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o.requires
+CMakeFiles/obj.dir/requires: CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o.requires
 .PHONY : CMakeFiles/obj.dir/requires
 
 CMakeFiles/obj.dir/clean:

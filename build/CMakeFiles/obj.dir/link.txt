@@ -1,1 +1,1 @@
-/usr/bin/c++    -std=c++11    CMakeFiles/obj.dir/main.cpp.o CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o  -o obj -rdynamic -Wl,-Bstatic -lpthread -Wl,-Bdynamic 
+/usr/bin/c++    -std=c++11    CMakeFiles/obj.dir/ThreadPool/src/Thread/Thread.cpp.o CMakeFiles/obj.dir/lab/test_FixedBufferHandle.cpp.o  -o ../bin/obj -rdynamic /lib/x86_64-linux-gnu/libpthread.so.0 

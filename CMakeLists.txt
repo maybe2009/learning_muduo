@@ -3,14 +3,25 @@ project(obj CXX)
 
 #Set my module paths
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+
 #Support C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-#Add ThreadPool dir
-aux_source_directory(${PROJECT_SOURCE_DIR}/ThreadPool/src/Thread SRC_THREAD)
-set(SOURCE_FILES main.cpp ${SRC_THREAD} ThreadPool/headers/Log/LogStream.h)
+
+#Set target directory
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
+#Add ThreadPool source directory
+aux_source_directory(${PROJECT_SOURCE_DIR}/ThreadPool/src/Thread DIR_SRC)
+aux_source_directory(${PROJECT_SOURCE_DIR}/ThreadPool/headers DIR_HEADER)
+
+set(SOURCE_FILES ${DIR_SRC} ./lab/test_FixedBufferHandle.cpp )
+set(HEADER_FILES ${PROJECT_SOURCE_DIR}/ThreadPool/headers/)
+
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/ThreadPool/headers/)
 
 add_executable(obj ${SOURCE_FILES})
 #Use self-edit FindLinuxPthread module
+
 find_package(LinuxPthread REQUIRED)
 if (LIB_PTHREAD_FOUND)
 	message(STATUS "FindLinuxPthread: pthread  found! " ${LIB_LINUX_PTHREAD})

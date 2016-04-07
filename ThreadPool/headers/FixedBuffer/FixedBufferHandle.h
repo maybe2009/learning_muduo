@@ -20,6 +20,8 @@
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/noncopyable.hpp>
 #include <vector>
+#include <assert.h>
+
 #include "FixedBuffer.h"
 #include "../Synchronization/Mutex.h"
 #include "../Synchronization/Condition.h"
@@ -34,37 +36,23 @@ public: /*type defines*/
     typedef BufferContainer*                    ContainerPtr;
 
 public: /*Constructions etc*/
-    FixedBufferHandle(size_t buf_size, size_t max_buf_size = 8, size_t chunk = 4)
-        : bufferSize_(buf_size),
-          chunkSize_(chunk),
-          chunkNum_(4),
-          maxBufSize_(max_buf_size),
-          currentBufSize_(0),
-          overflowCount_(0),
-          
-          currentBuf_(new FixedBuffer(buf_size)),
-          supportBuf_(new FixedBuffer(buf_size)),
-          
-          dutyQueue_(),
-          readyQueue_(),
-          cleanQueue_(),
-          supportQueue_(),
-          
-          dutyQueuePtr_(&dutyQueue_),
-          readyQueuePtr_(&readyQueue_),
-          cleanQueuePtr_(&cleanQueue_),
-          supportQueuePtr_(&supportQueue_),
-          
-          mutex_(),
-          cond_(mutex_)
+    FixedBufferHandle(size_t buf_size):
+        bufferSize_(buf_size),
+        fd_(-1),
+
+        currentBuf_(new FixedBuffer(buf_size)),
+        dutyQueue_(),
+        cleanQueue_(),
+      
+        dutyQueuePtr_(&dutyQueue_),
+        cleanQueuePtr_(&cleanQueue_),
+      
+        mutex_(),
+        cond_(mutex_),
+        currentBufferNum_(1)
+
     {
-        /*
-        dutyQueue_.reserve(chunkNum_);
-        readyQueue_.reserve(chunkNum_);
-        cleanQueue_.reserve(chunkNum_);
-        supportQueue_.reserve(chunkNum_);
-        */
-        allocate();
+        init();
     } 
      
     /*
@@ -76,59 +64,95 @@ public: /*Constructions etc*/
 public: /*handle size_terfaces for users*/
     void doFrontWrite(const char * buf, size_t len)
     {
-        ScopeMutex lock(mutex_);
-        
-        if (currentBuf_->getAvailable() > len)
+        ScopeMutex lock(mutex_);     
+        //assert(!currentBuf_.empty());
+        /*if current buffer is sufficent, just wrtie, otherwise, perform reload
+         * operations
+         */
+        if (currentBuf_->getAvailable() < len)
         {
-            currentBuf_->write(buf, len);
+            std::cout << "Current buffer is not sufficent, perform reloading" << std::endl;
+            enqueueDuty();
+           
+            /*if clean queue is empty allocate one FixedBuffer*/ 
+            if(cleanQueuePtr_->empty())
+            {
+                std::cout << "Clean queue is empty, allocating..." << std::endl;
+                if(allocate(1))
+                {
+                    std::cout << "Reloading..." << std::endl;
+                    reloadCurrentBuf();
+                    currentBuf_->write(buf, len);
+                }
+                else
+                {
+                    std::cout << "Allocate fail, give up write!" << std::endl;
+                    handleLackofBuffer();
+                } 
+            }
+            else
+            {
+                std::cout << "Reloading..." << std::endl;
+                reloadCurrentBuf();
+                currentBuf_->write(buf,len);
+            }  
         }
         else
         {
-            pushCurrentBufDuty();
-            getNewCurrentBuf();
             currentBuf_->write(buf, len);
-            cond_.signal();
-        }
-        show();
+        }    
+        
+        std::cout << "Write completed! Signal!" << std::endl; 
+        cond_.signal();
     }
-    
-    
+     
     void doBackGround()
     {
+        if(fd_ < 0)
+        {
+            return;
+        }
+
         while(1)
         {
-            {   /*Just a swap to make criticle section short*/
+            {   /*Just a pop operation to make criticle section short*/
+                std::cout << "doBackGround acquire lock" << std::endl;
                 ScopeMutex lock(mutex_);
                 while(dutyQueuePtr_->empty())
                 {
+                    std::cout << "Duty queue is empty, sleep..." << std::endl;
                     cond_.wait();
+                    std::cout << "Sigal received! Wake up!" << std::endl;
                 }
-                pushCurrentBufDuty();
-                getNewCurrentBuf();
-                swapDuty();
+                std::cout << "Dequeue writting buffer" << std::endl;
+                dequeuDuty();
             }
             
-            /*Write file operation may take a long time*/
-            handleDuty();
-            
-            {
-                /*Constant complexcity splice*/
+            std::cout << "Perform writting to file .... " << std::endl;
+            //assert(!writtingBuf_.empty()); 
+            dumpWrittingBuf();
+            std::cout << "Writting to file completed!" << std::endl;
+
+            {   /*Write operation over, push back writting buffer to clean queue*/
                 ScopeMutex lock(mutex_);
-                spliceClean();
-                ss();
+                std::cout << "Enqueue writting buffer" << std::endl;
+                enqueueClean();
             }
         }
     }
-     
+    
+    void setFileDescriptor(int fd)
+    {
+        fd_ = fd;
+    }    
+
     /* TODO delete show() ss() after debug*/
     void show()
     {
         std::cout << "...Add..." << std::endl;
         currentBuf_->show();    
         std::cout << "Duty Queue Size: "  << dutyQueuePtr_->size() << std::endl;
-        std::cout << "Ready Queue Size: " << readyQueuePtr_->size() << std::endl;
         std::cout << "Clean Queue Size: " << cleanQueuePtr_->size() << std::endl;
-        std::cout << "Support Queue Size: " << supportQueuePtr_->size() << std::endl;
         std::cout << "****************************************************" << std::endl;
     
     }
@@ -138,98 +162,92 @@ public: /*handle size_terfaces for users*/
         std::cout << "...Moving..." << std::endl;
         currentBuf_->show();    
         std::cout << "Duty Queue Size: "  << dutyQueuePtr_->size() << std::endl;
-        std::cout << "Ready Queue Size: " << readyQueuePtr_->size() << std::endl;
         std::cout << "Clean Queue Size: " << cleanQueuePtr_->size() << std::endl;
-        std::cout << "Support Queue Size: " << supportQueuePtr_->size() << std::endl;
-        std::cout << "****************************************************" << std::endl;
-
     }
 
 private: /*utility functions*/
-    
-    /**
-     * @brief Push current buffer to duty queue
-     */
-    void pushCurrentBufDuty()
+    void init()
     {
+        chunkSize_ = 4;
+        maxBufferNum_ = 10;
+    }
+
+    void enqueueDuty()
+    {
+        /*push current buffer to duty queue*/
         dutyQueuePtr_->push_back(currentBuf_.release());
-        currentBuf_.swap(supportBuf_);
-    } 
-    
-    void getNewCurrentBuf()
-    {
-        supportBuf_ = supportQueuePtr_->pop_front();
     }
     
-    void swapDuty()
+    void reloadCurrentBuf()
     {
-        ContainerPtr tmp = dutyQueuePtr_ ;
-        dutyQueuePtr_    = readyQueuePtr_;
-        readyQueuePtr_   = tmp;
+        /*get new current buffer*/
+        currentBuf_ = cleanQueuePtr_->pop_front(); 
+    }    
+    
+    void dequeuDuty()
+    {
+        /*get the first duty buffer*/
+        writtingBuf_ = dutyQueuePtr_->pop_front();
     }
     
-    void handleDuty()
+    void dumpWrittingBuf()
     {
-        BufAutoPtr tmp;
-
-        while(!readyQueuePtr_->empty())
-        {
-            tmp = readyQueuePtr_->pop_front();
-            cleanQueuePtr_->push_back(tmp.release());
-        }
+        writtingBuf_->dump(fd_);
+        writtingBuf_->clear();
     }
 
-    void spliceClean()
+    void enqueueClean()
     {
-        supportQueuePtr_->transfer(supportQueuePtr_->begin(), *cleanQueuePtr_);
+        /*push writting buffer to clean buffer queue*/
+        cleanQueuePtr_->push_back(writtingBuf_.release());       
     }
     
-    void allocate()
+    bool allocate(size_t num)
     {
-        size_t sizeNeeded;
-        
-        sizeNeeded = chunkSize_ * bufferSize_;
-        if ((currentBufSize_ + sizeNeeded) <= maxBufSize_) 
+        if (currentBufferNum_ + num <= maxBufferNum_)
         {
-            size_t i;
-            for (i = 0; i < chunkNum_; ++i) 
+            for (size_t i = 0; i < num; ++i)
             {
-                supportQueuePtr_->push_back(new FixedBuffer(bufferSize_));
-                std::cout << "+++" << std::endl;
-                currentBufSize_ += bufferSize_;
-            }             
-        } 
-        else
-        {
-            overflowCount_++;
-            return;
+                cleanQueuePtr_->push_back(new FixedBuffer(bufferSize_)); 
+                currentBufferNum_++;
+            }
+
+            return true;
         }
+        else 
+        {
+            return false;
+        }
+    }
+
+    void handleLackofBuffer()
+    {
+        
     }
 
 private:
     size_t                 bufferSize_;
-    size_t                 chunkSize_;
-    size_t                 chunkNum_;
-    size_t                 maxBufSize_;
-    size_t                 currentBufSize_;
-    size_t                 overflowCount_;
-    
+    int                    fd_;
+
     BufAutoPtr          currentBuf_;
-    BufAutoPtr          supportBuf_;
-    
+    BufAutoPtr          writtingBuf_;
+
     BufferContainer     dutyQueue_;
-    BufferContainer     readyQueue_;
     BufferContainer     cleanQueue_;
-    BufferContainer     supportQueue_;
     
     ContainerPtr        dutyQueuePtr_;
-    ContainerPtr        readyQueuePtr_;
     ContainerPtr        cleanQueuePtr_;
-    ContainerPtr        supportQueuePtr_;
  
     Mutex               mutex_;
     Condition           cond_;
-};
-};
+
+public:
+    size_t                 chunkSize_;
+    size_t                 maxBufferNum_;
+    size_t                 currentBufferNum_;
+
+};//class FixedBufferHandle
+
+};//namespace ok
 #endif /* ifndef OK_FIXEDBUFFERHANDLE_INCLUDED*/
 

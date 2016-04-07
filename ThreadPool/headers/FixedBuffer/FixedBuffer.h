@@ -12,11 +12,13 @@
 #ifndef OK_FIXEDBUFFER_INCLUDED
 #define OK_FIXEDBUFFER_INCLUDED
 
+#include <iostream>
 #include <cstdio>
 #include <unistd.h>
 #include <string.h>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/noncopyable.hpp>
+
 namespace ok{
 #define KB(n) ((n) * 1024)
 #define MB(n) ((n) * 1024 *1024)
@@ -27,7 +29,7 @@ public:
     typedef char BYTE;
 
 public:
-    FixedBuffer (int size)
+    FixedBuffer (size_t size)
         : capacity_(size),
           available_(size),
           waterMeter_(0),
@@ -41,13 +43,14 @@ public:
         delete []start_;
     }
 
-    void dump(int fd)
+    void dump(size_t fd)
     {
         /*TODO add exception*/
-        ::write(fd, start_, capacity_);
+        std::cout << "Dump :" << waterMeter_ << std::endl;
+        ::write(fd, start_, waterMeter_);
     }
 
-    void write(const void *src, int len)
+    void write(const void *src, size_t len)
     {
         if (len <= available_) {
             memcpy(current_, src, len);
@@ -55,53 +58,83 @@ public:
         } 
     }
 
+    
+    /**
+     * @brief Set each byte to 0, reset all the argument like waterMeter_ etc. 
+     */
     void clear()
     {
         memset(start_, 0, capacity_);
         current_    = start_;
         available_  = capacity_;
+        waterMeter_ = 0;
     }
      
-    int getAvailable() const
+
+    /**
+     * @brief Get the current available size in byte
+     *
+     * @return Current available bytes
+     */
+    size_t getAvailable() const
     {
         return available_;
     }
 
-    int getCapacity() const
+
+    /**
+     * @brief Get capacity
+     *
+     * @return Capacity 
+     */
+    size_t getCapacity() const
     {
         return capacity_;
     }
     
-    int getWaterMeter() const 
+    /**
+     * @brief Get watermeter indication which represents how many bytes there 
+     *        are in this buffer
+     *
+     * @return Watermeter indication
+     */
+    size_t getWaterMeter() const 
     {
         return waterMeter_; 
-    }
-
-    char* getCurrent()
-    {
-        return current_;
     }
 
     /*TODO: delete show() after debug*/
     void show()
     {
-        printf("Total size %d Water Meter %d Avai: %d\n", capacity_, waterMeter_, available_);
-        for (int i = 0;  i < waterMeter_; ++i) {
-            printf("%d:%c ", i, *(start_ + i));
+        //TODO:remove printf after test
+        printf("Total size %ld Water Meter %ld Avai: %ld\n", capacity_, waterMeter_, available_);
+        for (size_t i = 0;  i < waterMeter_; ++i) {
+            printf("P%ld:%c ", i, *(start_ + i));
         }
         printf("\n");
     }
+
 private:
-    void moveMeters(int len)
+    
+    /**
+     * @brief When writting to buffer, use this function to adjust 
+     *corresponding indicators like watermeter etc. After this routine,
+     *current_ index will move ahead for len bytes, available_ bytes will
+     *reduce by len, waterMeter_ will rise for len
+     *
+     * @param len Thes number of bytes to be written
+     */
+    void moveMeters(size_t len)
     {
         current_    += len;
         available_  -=len;
         waterMeter_ += len;
     }
+
 private:
-    const int       capacity_;
-    int             available_;
-    int             waterMeter_;
+    const size_t       capacity_;
+    size_t             available_;
+    size_t             waterMeter_;
     BYTE* const     start_;
     BYTE*           current_;
     BYTE*           end_;
