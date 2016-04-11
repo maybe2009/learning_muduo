@@ -35,7 +35,8 @@ public: /*type defines*/
     typedef BufferContainer::auto_type          BufAutoPtr;
     typedef BufferContainer*                    ContainerPtr;
 
-public: /*Constructions etc*/
+public: /*Const
+ * ructions etc*/
     FixedBufferHandle(size_t buf_size):
         bufferSize_(buf_size),
         fd_(-1),
@@ -65,7 +66,7 @@ public: /*handle size_terfaces for users*/
     void doFrontWrite(const char * buf, size_t len)
     {
         ScopeMutex lock(mutex_);     
-        //assert(!currentBuf_.empty());
+        assert(currentBuf_ != nullptr);
         /*if current buffer is sufficent, just wrtie, otherwise, perform reload
          * operations
          */
@@ -86,8 +87,9 @@ public: /*handle size_terfaces for users*/
                 }
                 else
                 {
-                    std::cout << "Allocate fail, give up write!" << std::endl;
-                    handleLackofBuffer();
+                    std::cout << "Allocate fail, handling..." << std::endl;
+                    handleLackofCleanBuf();
+                    currentBuf_->write(buf, len);
                 } 
             }
             else
@@ -183,7 +185,24 @@ private: /*utility functions*/
         /*get new current buffer*/
         currentBuf_ = cleanQueuePtr_->pop_front(); 
     }    
-    
+
+    void handleLackofCleanBuf()
+    {
+        reloadFromDutyQueueHead();
+    }
+
+    void reloadFromDutyQueueHead()
+    {
+        currentBuf_ = dutyQueuePtr_->pop_front();
+        currentBuf_->clear();
+    }
+
+    void reloadFromDutyQueueTail()
+    {
+        currentBuf_ = dutyQueuePtr_->pop_back();
+        currentBuf_->clear();
+    }
+
     void dequeuDuty()
     {
         /*get the first duty buffer*/
@@ -218,11 +237,6 @@ private: /*utility functions*/
         {
             return false;
         }
-    }
-
-    void handleLackofBuffer()
-    {
-        
     }
 
 private:
