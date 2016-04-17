@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/admin/ClionProjects/ThreadPool/ThreadPool/headers/Time/Time.cpp
+sys/time.h
+-
+ctime
+-
+Time.h
+/home/admin/ClionProjects/ThreadPool/ThreadPool/headers/Time/Time.h
+
+/home/admin/ClionProjects/ThreadPool/ThreadPool/headers/Time/Time.h
+sys/time.h
+-
+string
+-
+

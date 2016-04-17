@@ -96,7 +96,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=obj
+CMAKE_PROJECT_NAME:STATIC=test_format_range
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -158,6 +158,12 @@ obj_BINARY_DIR:STATIC=/home/admin/ClionProjects/ThreadPool/build
 
 //Value Computed by CMake
 obj_SOURCE_DIR:STATIC=/home/admin/ClionProjects/ThreadPool
+
+//Value Computed by CMake
+test_format_range_BINARY_DIR:STATIC=/home/admin/ClionProjects/ThreadPool/build
+
+//Value Computed by CMake
+test_format_range_SOURCE_DIR:STATIC=/home/admin/ClionProjects/ThreadPool
 
 
 ########################

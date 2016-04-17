@@ -36,5 +36,7 @@ SET(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 SET(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/obj.dir/DependInfo.cmake"
+  "CMakeFiles/test_FixedBufferHandle.dir/DependInfo.cmake"
+  "CMakeFiles/test_Time.dir/DependInfo.cmake"
+  "CMakeFiles/test_format_range.dir/DependInfo.cmake"
   )
