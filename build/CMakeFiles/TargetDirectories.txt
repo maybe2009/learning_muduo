@@ -1,3 +1,0 @@
-/home/admin/ClionProjects/ThreadPool/build/CMakeFiles/test_FixedBufferHandle.dir
-/home/admin/ClionProjects/ThreadPool/build/CMakeFiles/test_Time.dir
-/home/admin/ClionProjects/ThreadPool/build/CMakeFiles/test_format_range.dir

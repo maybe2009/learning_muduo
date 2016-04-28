@@ -1,1 +1,0 @@
-/usr/bin/c++    -std=c++11    CMakeFiles/test_format_range.dir/ThreadPool/src/Thread/Thread.cpp.o CMakeFiles/test_format_range.dir/ThreadPool/headers/Time/Time.cpp.o CMakeFiles/test_format_range.dir/lab/test_format_range.cpp.o  -o ../bin/test_format_range -rdynamic /lib/x86_64-linux-gnu/libpthread.so.0 
